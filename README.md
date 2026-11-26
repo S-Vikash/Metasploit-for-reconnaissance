@@ -24,13 +24,15 @@ Open terminal and try execute some kali linux commands
 
 Find out the ip address of the attackers system
 ## OUTPUT:
-
+![img](img/image1.png)
 
 Invoke msfconsole:
 ## OUTPUT:
+![img](img/image2.png)
 
 
 Type help or a question mark "?" to see the list of all available commands you can use inside msfconsole.
+![img](img/image3.png)
 
 
 
@@ -39,13 +41,16 @@ Port Scanning:
 Following command is executed for scanning the systems on our local area network with a TCP scan (-sT) looking for open ports between 1 and 1000 (-p1-1000).
 msf >  nmap -sT 192.168.1810/24 -p1-1000  (Replace with appropriate IP Address)
 ## OUTPUT:
+![img](img/image4.png)
 
-step4:
+### step4:
 use the db-nmap command to scan and save the results into Metasploit's postgresql attached database. In that way, you can use those results in the exploitation stage later.
+
 
 scan the targets with the command db_nmap as follows.
 msf > db_nmap 192.168.181.0/24
 ## OUTPUT:
+![img](img/image5.png)
 
 
 
@@ -53,12 +58,14 @@ Metasploit has a multitude of scanning modules built in. If we open another term
 cd /usr/share /metasploit-framework/modules/auxiliary
 kali > ls -l
 ## OUTPUT:
+![img](img/image6.png)
 
 
 
 Search is a powerful command in Metasploit that you can use to find what you want to locate. 
 msf >search name:Microsoft type:exploit
 ## OUTPUT:
+![img](img/image7.png)
 
 
 
@@ -68,6 +75,8 @@ Before beginning, set up the Metasploit database by starting the PostgreSQL serv
 systemctl start postgresql
 msfdb init
 ## OUTPUT:
+![img](img/image8.png)
+![img](img/image9.png)
 
 
 
@@ -77,10 +86,12 @@ Find the IP address of the Metasploitable machine first. Then, use the db_nmap c
 db_nmap -sV -sC -p 3306 <metasploitable_ip_address>
 
 ## OUTPUT:
+![img](img/image10.png)
 
 Use the search option to look for an auxiliary module to scan and enumerate the MySQL database.
 search type:auxiliary mysql
 ## OUTPUT:
+![img](img/image11.png)
 
 
 use the auxiliary/scanner/mysql/mysql_version module by typing the module name or associated number to scan MySQL version details.
@@ -88,17 +99,19 @@ use 11
 Or:
 use auxiliary/scanner/mysql/mysql_version
 ## OUTPUT:
+![img](img/image12.png)
 
 
 
 
 Use the set rhosts command to set the parameter and run the module, as follows:
 ## OUTPUT:
-
+![img](img/image13.png)
 
 
 After scanning, you can also brute force MySQL root account via Metasploit's auxiliary(scanner/mysql/mysql_login) module.
 ## OUTPUT:
+![img](img/image14.png)
 
 
 
@@ -110,11 +123,58 @@ set RHOSTS <metasploitable-ip-address>
 Set BLANK_PASSWORDS to true in case there is no password set for the root account.
 set BLANK_PASSWORDS true
 ## OUTPUT:
-
-
+![img](img/image15.png)
 
 
 
 
 ## RESULT:
 The Metasploit framework for reconnaissance is  examined successfully
+
+
+<!-- 
+parrot:
+ifconfig
+msfconsole
+?
+nmap -sT <metasploitable2 ip> -p1-1000
+exit
+sudo systemctl start postgresql
+sudo systemctl status postgresql
+sudo msfdb init
+msfconsole
+db_status
+db_nmap -sV <metasploitable2 ip>
+
+new terminal:
+cd /usr/share/metasploit-framework/modules/auxiliary
+ls -l
+
+In old terminal:
+search name:Microsoft type:exploit
+search iis_auth_bypass
+info auxiliary/admin/http/iis_auth_bypass
+db_nmap -sV -sC -p 3306 <METASPLOITABLE_IP>
+search type:auxiliary mysql
+use auxiliary/scanner/mysql/mysql_version
+show options
+set RHOSTS <METASPLOITABLE_IP>
+run
+back
+search auxiliary mysql_login
+use auxiliary/scanner/mysql/mysql_login
+show options
+set PASS_FILE /usr/share/wordlists/rockyou.txt
+set RHOSTS 192.168.20.132
+set BLANK_PASSWORDS true
+set VERBOSE no
+
+new terminal:
+sudo apt update
+sudo apt install wordlists
+cd /usr/share/wordlists
+sudo gzip -dk /usr/share/wordlists/rockyou.txt.gz
+
+old terminal:
+run
+-->
